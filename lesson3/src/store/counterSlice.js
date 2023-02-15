@@ -1,11 +1,15 @@
 // import {createSlice} from "@reduxjs/toolkit";
 import {createSlice} from "../rtk-nut";
+// import {createSlice} from "../rtk-nut";
 
 export const counterSlice = createSlice({
   name: "counter",
   initialState: {
     value: 0,
   },
+  // "reducers"
+  // sliceName/reducerName
+  // counter/increment
   reducers: {
     increment: (state) => {
       // 由于使用了Immerjs, rtk允许我们在reducers里直接修改状态，但是实际上state并没有发生改变

@@ -1,54 +1,50 @@
-import createAction from "./createAction";
+// import {createReducer} from "@reduxjs/toolkit";
 import createReducer from "./createReducer";
 
-export default function createSlice(options) {
-  const {name, initialState, reducers = {}} = options;
-
+export default function createSlice({name, initialState, reducers}) {
   const reducerNames = Object.keys(reducers);
+  const actionsCreators = {};
 
-  const actionCreators = {};
-
-  const sliceCaseReducersByName = {};
-  const sliceCaseReducersByType = {};
+  // key: value
+  // counter/increment : 带引号的reducer
+  const sliceCaseReducerByType = {};
 
   reducerNames.forEach((reducerName) => {
+    const type = `${name}/${reducerName}`;
     const maybeReducerWithPrepare = reducers[reducerName];
-    const type = getType(name, reducerName);
-
-    sliceCaseReducersByName[reducerName] = maybeReducerWithPrepare;
-    sliceCaseReducersByType[type] = maybeReducerWithPrepare;
-
-    actionCreators[reducerName] = createAction(type);
+    actionsCreators[reducerName] = createAction(type);
+    sliceCaseReducerByType[type] = maybeReducerWithPrepare;
   });
 
+  // 创建一个reducer
   function buildReducer() {
-    const finalCaseReducers = {...sliceCaseReducersByType};
     return createReducer(initialState, (builder) => {
-      for (let key in finalCaseReducers) {
-        builder.addCase(key, finalCaseReducers[key]);
+      for (let key in sliceCaseReducerByType) {
+        builder.addCase(key, sliceCaseReducerByType[key]);
       }
     });
   }
 
   let _reducer;
-
   return {
     name,
+    actions: actionsCreators,
     reducer: (state, action) => {
       if (!_reducer) _reducer = buildReducer();
       return _reducer(state, action);
     },
-    actions: actionCreators,
-    caseReducers: sliceCaseReducersByName,
-
-    getInitialState: () => {
-      if (!_reducer) _reducer = buildReducer();
-
-      return _reducer.getInitialState();
-    },
   };
 }
 
-function getType(slice, actionKey) {
-  return `${slice}/${actionKey}`;
+function createAction(type) {
+  function actionCreator(...args) {
+    return {
+      type,
+      payload: args[0],
+    };
+  }
+
+  actionCreator.type = actionCreator;
+
+  return actionCreator;
 }

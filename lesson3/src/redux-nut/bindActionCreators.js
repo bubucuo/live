@@ -3,7 +3,7 @@ function bindActionCreator(creator, dispatch) {
 }
 
 export function bindActionCreators(creators, dispatch) {
-  let obj = {};
+  const obj = {};
 
   for (let key in creators) {
     obj[key] = bindActionCreator(creators[key], dispatch);
