@@ -1,18 +1,13 @@
-import {useMemo} from "react";
 import {NavigationContext} from "./Context";
+import {useMemo} from "react";
 
-export default function Router({navigator, children, location}) {
+export default function Router({children, location, navigator}) {
   const navigationContext = useMemo(
-    () => ({
-      navigator,
-      location,
-    }),
+    () => ({navigator, location}),
     [navigator, location]
   );
 
   return (
-    <NavigationContext.Provider value={navigationContext}>
-      {children}
-    </NavigationContext.Provider>
+    <NavigationContext.Provider children={children} value={navigationContext} />
   );
 }

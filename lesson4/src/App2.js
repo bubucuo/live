@@ -14,6 +14,8 @@ import DataLoading, {loaderOfDataLoading} from "./pages/DataLoading";
 
 const AboutLazy = React.lazy(() => import("./pages/AboutLazy"));
 
+// 配置式路由
+// 嵌套(nested)
 const router = createBrowserRouter([
   {
     path: "/",
@@ -26,6 +28,7 @@ const router = createBrowserRouter([
       },
       {
         path: "user",
+        // 权限路由
         element: (
           <RequireAuth>
             <User />
@@ -37,11 +40,11 @@ const router = createBrowserRouter([
         element: <Login />,
       },
       {
-        path: "/product",
+        path: "product",
         element: <Product />,
         children: [
           {
-            path: "/product/:id",
+            path: ":id", //动态路由
             element: <ProductDetail />,
           },
         ],
@@ -63,6 +66,7 @@ const router = createBrowserRouter([
           </React.Suspense>
         ),
       },
+      // 404
       {
         path: "*",
         element: <NoMatch />,

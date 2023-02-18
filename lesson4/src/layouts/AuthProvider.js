@@ -26,12 +26,13 @@ export default function AuthProvider({children}) {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
+// 权限组件
 export function RequireAuth({children}) {
   let auth = useAuth();
   let location = useLocation();
 
   if (!auth.user) {
-    return <Navigate to="/login" state={{from: location}} replace />;
+    return <Navigate to="/login" state={{from: location}} />;
   }
 
   return children;
